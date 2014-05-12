@@ -1,6 +1,6 @@
 {
   "name": "tov8",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Streamlined C/C++ v8 bindings generator for Node.JS inspired by tolua++ (requires C++11)",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "fire-ts": "0.0.7",
     "glob-expand": "0.0.2",
     "nan": "1.0.0",
-    "nid-parser": "0.0.1",
+    "nid-parser": "0.0.3",
     "pegjs": "~0.8.0"
   },
   "devDependencies": {
