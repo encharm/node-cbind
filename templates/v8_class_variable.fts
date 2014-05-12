@@ -1,0 +1,39 @@
+static NAN_METHOD(v8_<%= _class.name%>_setter_<%= variable.name%>) {
+  try {
+    v8::Local<v8::Object> thisValue = args.This();
+    if(!checkArgument<<%=_class.name%>*>(thisValue)) {
+      NanReturnUndefined();
+    }
+    <%=_class.name%>* obj = getArgument<<%=_class.name%>*>(thisValue);
+
+    obj-><%=variable.name%> = getArgument<<%=typeIdentifier(variable)%>>(args[0]);
+
+    NanReturnUndefined();
+  } catch(const std::exception& e) {
+    NanThrowError(v8::Exception::Error(NanNew<v8::String>(e.what())));
+    NanReturnUndefined();
+  } catch(...) {
+    NanThrowError(v8::Exception::Error(NanNew<v8::String>("Unknown exception thrown in native code")));
+    NanReturnUndefined();
+  }
+}
+
+static NAN_METHOD(v8_<%= _class.name%>_getter_<%= variable.name%>) {
+  try {
+    v8::Local<v8::Object> thisValue = args.This();
+    if(!checkArgument<<%=_class.name%>*>(thisValue)) {
+      NanReturnUndefined();
+    }
+
+    <%=_class.name%>* obj = getArgument<<%=_class.name%>*>(thisValue);
+
+    NanReturnValue(toV8Type_<%= typeIdentifier(variable) %>(obj-><%=variable.name%>));
+
+  } catch(const std::exception& e) {
+    NanThrowError(v8::Exception::Error(NanNew<v8::String>(e.what())));
+    NanReturnUndefined();
+  } catch(...) {
+    NanThrowError(v8::Exception::Error(NanNew<v8::String>("Unknown exception thrown in native code")));
+    NanReturnUndefined();
+  }
+}

@@ -1,0 +1,94 @@
+      
+<%parameters.forEach(function(parameter, i) { %>
+  <%
+    if(parameter.attributes.set || parameter.attributes.out) {
+      parametersData.setOffset += 1;
+    }
+    var nodeArgNum = i - parametersData.setOffset;
+    var argNum = i;
+    parametersData.name2param[parameter.name] = {
+      variable: "arg" + i, 
+      data: parameter,
+      argNum: argNum,
+      nodeArgNum: nodeArgNum
+    };
+    if(parameter.attributes.set || parameter.attributes.out) {
+      return
+    }
+  %>
+
+  if(!checkArgument<<%=typeString(parameter)%>>(args[<%=nodeArgNum%>])) {
+    throw v8_exception("Cannot convert argument <%=nodeArgNum+1%> to type: <%= typeString(parameter) %>");
+  }
+
+    <% if (parameter.attributes.buffer) { %>
+       auto arg<%= argNum %> = node::Buffer::Data(args[<%=  nodeArgNum %>]);
+    <% } else if(parameter.functionPointer) { %>
+       static v8::Persistent<v8::Function> argData<%=argNum %>;
+
+        
+       auto arg<%= argNum %> = FunctionWrap<<%=typeString(parameter)%>>::nativeFromV8(args[<%=nodeArgNum%>], "<%=typeString(parameter)%>",
+       argData<%=argNum %>,
+       [] <%=typeString(parameter, {onlyParameters: true,withNames: true})%> {
+          auto v8Func = NanNew(argData<%=argNum %>);
+          <% var callArgs = parameter.type.parameters.map(function(callParam) {
+            return "toV8Type_" + typeIdentifier(callParam) + '(' + callParam.name + ')';
+
+          }).join(","); %>
+
+        v8::Handle<v8::Value> args[] = {<%=callArgs%>};
+        auto ret = v8Func->Call(NanUndefined(), <%=parameter.type.parameters.length%> ,args);
+        return getArgument<<%=typeString(parameter.type, {onlyReturn: true})%>>(ret);
+      });
+    <% } else { %>
+       auto arg<%= argNum %> = getArgument<<%=typeString(parameter)%>>(args[<%= nodeArgNum %>]);
+    <% } %>
+    
+    <% if(parameter.attributes.clear_free) { %>
+      clear_free_<%=typeIdentifier(parameter)%>(args[<%=nodeArgNum%>]);
+    <% } %>
+
+<%}); %>
+
+<% parameters.forEach(function(parameter, i) {%>
+  <% if(!parameter.attributes.out) return; %> 
+
+  <%
+    var typeStr = typeString(parameter);
+    var pos = typeStr.lastIndexOf('*');
+    if(pos == -1)
+      throw new Error("out used with not a pointer!")
+    var typeWithoutPtr = typeStr.substring(0, pos) + typeStr.substring(pos+1);
+    var typeOfOutputParameter = typeWithoutPtr;
+  %>
+
+  <% if(parameter.attributes.string) { %>
+
+    <%=typeWithoutPtr%> arg<%=i%>_container[<%=parameter.attributes.string%>];
+    <%=typeString(parameter)%> arg<%=i%> = arg<%=i%>_container;
+
+    <% typeOfOutputParameter = typeString(parameter); %>
+
+  <% } else { %>
+
+    <%=typeWithoutPtr%> arg<%=i%>_container;
+    <%=typeString(parameter)%> arg<%=i%> = &arg<%=i%>_container;
+  <% } %>
+  <%
+    parametersData.outputParameters.push({
+      argNum: i,
+      name: 'arg' + i + '_container',
+      parameter: parameter,
+      type: typeOfOutputParameter
+    });
+  %>
+
+
+<% });%>
+
+<% parameters.forEach(function(parameter, i) {%>
+  <% if(!parameter.attributes.set) return; %>
+
+  <%=typeString(parameter)%> arg<%=i%> = <%= parseSet(parameter.attributes.set, parametersData.name2param) %>;
+
+<% });%>

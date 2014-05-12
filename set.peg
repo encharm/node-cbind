@@ -1,0 +1,36 @@
+{
+  var self = this;
+  function transformIdentifier(identifier, attribute) {
+    var param = self.name2param[identifier];
+    if(param) {
+      if(attribute) {
+        if(param.data.attributes.buffer && attribute == 'length') {
+          return 'node::Buffer::Length(args[' + param.nodeArgNum +'])';
+        }
+      }
+      return self.name2param[identifier].variable;
+    }
+
+    if(attribute)
+      return identifier + '.' + attribute;
+    return identifier;
+  }
+}
+start
+  = expression
+
+expression = elements:(element:element _ {return element;})*  {return elements.join(''); }
+
+element = identifier_attribute / identifier:identifier {
+  return transformIdentifier(identifier);
+} / [+-\\(\\)*/]
+
+identifier_attribute = identifier:identifier _ '.' _ attribute:identifier {
+  return transformIdentifier(identifier, attribute);
+}
+
+identifier = char:[a-zA-Z_] chars:[a-zA-Z0-9_]* {
+  return char + chars.join('');
+}
+
+_ = [ \t\n]*

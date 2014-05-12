@@ -1,0 +1,15 @@
+static NAN_METHOD(v8_<%= func.attributes.rename || func.name%>) {
+  NanScope();
+  try {
+    <% var obj = func; %>
+    <% var callObject = obj.name; %>
+    <%@ call.fts (obj,callObject) %>
+
+  } catch(const std::exception& e) {
+    NanThrowError(v8::Exception::Error(NanNew<v8::String>(e.what())));
+    NanReturnUndefined();
+  } catch(...) {
+    NanThrowError(v8::Exception::Error(NanNew<v8::String>("Unknown exception thrown in native code")));
+    NanReturnUndefined();
+  }
+}

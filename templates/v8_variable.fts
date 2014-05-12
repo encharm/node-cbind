@@ -1,0 +1,73 @@
+<% if(!variable.functionPointer) { %>
+
+static NAN_SETTER(v8_setter_<%= variable.name%>) {
+  try {
+
+    if(!checkArgument<<%=typeString(variable, {forceParams: true})%>>(value)) {
+      throw v8_exception("Cannot convert value to type: <%= typeString(variable, {forceParams: true}) %>");
+    }
+
+    <%=variable.name%> = getArgument<<%=typeString(variable, {forceParams: true})%>>(value);
+
+    return;
+  } catch(const std::exception& e) {
+    NanThrowError(v8::Exception::Error(NanNew<v8::String>(e.what())));
+    return;
+  } catch(...) {
+    NanThrowError(v8::Exception::Error(NanNew<v8::String>("Unknown exception thrown in native code")));
+    return;
+  }
+  return;
+}
+
+static NAN_GETTER(v8_getter_<%= variable.name%>) {
+  NanScope();
+  try {
+
+    NanReturnValue(toV8Type_<%= typeIdentifier(variable, {forceParams: true}) %>(<%=variable.name%>));
+
+  } catch(const std::exception& e) {
+    NanThrowError(v8::Exception::Error(NanNew<v8::String>(e.what())));
+    NanReturnUndefined();
+  } catch(...) {
+    NanThrowError(v8::Exception::Error(NanNew<v8::String>("Unknown exception thrown in native code")));
+    NanReturnUndefined();
+  }
+  NanReturnUndefined();
+}
+
+<% } else { %>
+
+
+static NAN_SETTER(v8_setter_<%= variable.name%>) {
+  if(value->IsNull()) {
+    <%= variable.name %> = nullptr;
+    NanReturnUndefined();
+  }
+  else if(value->IsFunction()) {
+    static v8::Persistent<v8::Function> persistent;
+    
+    <%=variable.name%> = FunctionWrap<decltype(<%= variable.name%>)>::nativeFromV8(value, "<%=typeString(variable, {forceParams: true})%>", persistent,
+    []<%=typeString(variable, {onlyParameters: true,withNames: true})%> {
+      auto v8Func = NanNew(persistent);
+      <% var callArgs = variable.parameters.map(function(callParam) {
+        return "toV8Type_" + typeIdentifier(callParam) + '(' + callParam.name + ')';
+
+      }).join(","); %>
+      v8::Handle<v8::Value> args[] = {<%=callArgs%>};
+      auto ret = v8Func->Call(NanUndefined(), <%=variable.parameters.length%> ,args);
+      return getArgument<<%=typeString(variable.type, {onlyReturn: true})%>>(ret);
+    }
+    );
+    NanReturnUndefined();
+  }
+  throw v8_exception("Trying to assign non-function to a function pointer variable of type <%=typeString(variable, {forceParams: true})%>");
+  NanReturnUndefined();
+}
+
+static NAN_GETTER(v8_getter_<%= variable.name%>) {
+  NanReturnValue(FunctionWrap<decltype(<%= variable.name%>)>::create("<%=typeString(variable, {forceParams: true})%>", <%= variable.name%>, <%=typeIdentifier(variable, {forceParams: true}) %>_handler));
+  NanReturnUndefined();
+}
+
+<% } %>

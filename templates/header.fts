@@ -1,0 +1,27 @@
+#ifndef TOV8_<%= baseName.toUpperCase() %>_H
+#include <nan.h>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <functional>
+#include <exception>
+
+namespace tov8 {
+  #include "helpers.h"
+
+  <% processedTypes.forEach(function(type) { 
+    if(type === true)
+      return;
+  %>
+    #ifndef <%= type.ifdefIdentifier %>
+    #define <%= type.ifdefIdentifier %>
+    <%@ ptr_wrapper.fts (type) %>
+    #endif // <%= type.ifdefIdentifier %>
+  <% }); %>
+
+
+  <% var name = baseName; %>
+  <%@ namespace.fts (name)%>
+}
+
+#endif // TOV8_<%= baseName.toUpperCase() %>_H

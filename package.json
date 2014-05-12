@@ -1,0 +1,23 @@
+{
+  "name": "tov8",
+  "version": "0.0.1",
+  "description": "Streamlined C/C++ v8 bindings generator for Node.JS inspired by tolua++ (requires C++11)",
+  "main": "index.js",
+  "scripts": {
+    "test": "node-gyp build -d && mocha tests"
+  },
+  "author": "Damian Kaczmarek <damian@codecharm.co.uk>",
+  "license": "MIT",
+  "dependencies": {
+    "extend": "~1.2.1",
+    "fire-ts": "0.0.7",
+    "glob-expand": "0.0.2",
+    "nan": "1.0.0",
+    "nid-parser": "0.0.1",
+    "pegjs": "~0.8.0"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "mocha": "^1.18.2"
+  }
+}

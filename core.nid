@@ -1,0 +1,27 @@
+
+[[rename(createInt)]]
+int* [[free(delete)]] create(int in);
+
+[[rename(derefInt)]]
+int deref(int* in);
+
+[[rename(createFloat)]]
+float* [[free(delete)]] create(float in);
+
+[[rename(derefFloat)]]
+float deref(float* in);
+
+[[rename(createDouble)]]
+double* [[free(delete)]] create(double in);
+
+[[rename(derefDouble)]]
+double deref(double* in);
+
+[[rename(createStdString)]]
+std::string* [[free(delete)]] create(std::string in);
+
+[[rename(derefStdString)]]
+std::string deref(std::string* in);
+
+
+

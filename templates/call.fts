@@ -1,0 +1,54 @@
+<%
+  var parametersData = {
+    setOffset: 0,
+    outputParameters: [],
+    name2param: {}
+  };
+  var outputParameters = parametersData.outputParameters;
+  var parameters = obj.parameters || obj.type.parameters;
+%>
+
+<%@ parameters.fts (parameters,parametersData) %>
+
+<% var parametersForCall = parameters.map(function(parameter, i) {
+    return "arg" + i;
+  }).join(", ");
+%>
+  
+  <% var returnType = (obj.functionPointer) ? 
+    typeIdentifier(obj.type) : typeIdentifier(obj); %>
+  <% console.log(returnType); %>
+
+<% if(returnType == 'void') { %>
+  <%= callObject%>(<%= parametersForCall%>);
+
+  <% if(outputParameters.length === 1) { /* handle more output parameters */  %>
+
+
+    NanReturnValue(toV8Type_<%=typeIdentifier(outputParameters[0].type)%>(<%=outputParameters[0].name%>));
+
+  <% } else { %>
+    NanReturnUndefined();
+  <% } %>
+<% } else { %>
+  auto retValue = <%=callObject%>(<%= parametersForCall%>);
+  
+  <% obj.attributes = obj.attributes || {}; %>
+
+  NanReturnValue(toV8Type_<%= returnType %>(retValue
+    <% if(obj.attributes.free) { %>
+      , [=](<%=typeString(obj)%> obj) {
+      <% if(obj.attributes.free === true) { %>
+        free(obj);
+      <% } else if(obj.attributes.free === 'delete') { %>
+        delete obj;
+      <% } else { %>
+        <%=obj.attributes.free%>(obj);
+      <% } %>
+      })
+    <% } else { %>
+
+      )
+    <% } %>
+  );
+<% } %>

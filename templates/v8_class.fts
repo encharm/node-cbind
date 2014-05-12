@@ -1,0 +1,28 @@
+
+<% _class.declarations.forEach(function(declaration) { %>
+
+  <% if(declaration['_constructor']) { %>
+
+    <% var constructor = declaration._constructor; %>
+
+    <%@ v8_constructor.fts (constructor) %>
+
+  <% } else if(declaration.variable) { %>
+    <% var variable = declaration.variable; %>
+
+    <%@ v8_class_variable.fts (variable) %>
+
+  <% } else if(declaration.function) { %>
+    <% var method = declaration.function; %>
+
+    <%@ v8_class_method.fts (method) %>
+
+  <% } %>
+
+<% }); %>
+
+
+
+
+
+

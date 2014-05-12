@@ -1,0 +1,23 @@
+int globalInt;
+float globalFloat;
+double globalDouble;
+const char* globalCString;
+std::string globalStdString;
+
+int* globalPointerToInt;
+float* globalPointerToFloat;
+double* globalPointerToDouble;
+
+// not working yet
+//const char** globalPointerToCString;
+
+bool verifyGlobalInt42();
+bool verifyGlobalFloat43();
+bool verifyGlobalDouble44();
+
+bool verifyGlobalCString45();
+bool verifyGlobalStdString46();
+
+bool verifyPointerToInt42();
+bool verifyPointerToFloat43();
+bool verifyPointerToDouble44();

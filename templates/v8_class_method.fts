@@ -1,0 +1,19 @@
+static NAN_METHOD(v8_<%=_class.name %>_method_<%= method.attributes.rename || method.name%>) {
+  try {
+    v8::Local<v8::Object> thisValue = args.This();
+    if(!checkArgument<rectangle*>(thisValue)) {
+      NanReturnUndefined();
+    }
+    <%=_class.name%>* obj = getArgument<<%=_class.name%>*>(thisValue);
+    <% var obj = method; %>
+    <% var callObject = "obj->" + obj.name; %>
+    <%@ call.fts (obj,callObject) %>
+
+  } catch(const std::exception& e) {
+    NanThrowError(v8::Exception::Error(NanNew<v8::String>(e.what())));
+    NanReturnUndefined();
+  } catch(...) {
+    NanThrowError(v8::Exception::Error(NanNew<v8::String>("Unknown exception thrown in native code")));
+    NanReturnUndefined();
+  }
+}

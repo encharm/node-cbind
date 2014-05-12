@@ -1,0 +1,95 @@
+
+  
+  // <%= JSON.stringify(type) %>
+
+
+  <% if(type.functionPointer) { %>
+    typedef FunctionWrap<<%=typeString(type)%>> <%=typeIdentifier(type)%>_wrapper;
+  <% } else { %>
+    typedef HandleWrap<<%=typeString(type)%>> <%=typeIdentifier(type)%>_wrapper;
+  <% } %>
+
+  template<>
+  bool checkArgument<<%=typeString(type)%>>(v8::Local<v8::Value> obj) {
+    if(!obj->IsObject()) {
+      throw v8_exception("Trying to use non-object as boxed type: <%=typeString(type)%>");
+      return false;
+    }
+    return true;
+  }
+
+<% if(!type.functionPointer) { %>
+  template<>
+  auto getArgument<<%=typeString(type)%>>(v8::Local<v8::Value> obj) -> <%=typeString(type)%> {
+    if(!obj->IsObject()) {
+      throw v8_exception("Expected object as argument");;
+    }
+    auto ptr = <%=typeIdentifier(type)%>_wrapper::Unwrap(obj.As<v8::Object>(), TYPE_LITERAL("<%=typeString(type)%>"));
+    if(!ptr) {
+      throw v8_exception("Trying to dereference null pointer of type: <%=typeString(type)%>");
+    }
+    return ptr;
+  }
+  
+  void clear_free_<%=typeIdentifier(type)%> (v8::Local<v8::Value> obj) {
+    node::ObjectWrap::Unwrap<<%=typeIdentifier(type)%>_wrapper>(obj.As<v8::Object>())->clear_free(); 
+  }
+
+  v8::Handle<v8::Value> toV8Type_<%=typeIdentifier(type)%> (<%=typeString(type, {
+    param: 'input'
+    })%>, std::function<void(<%=typeString(type)%>)> deleter = nullptr) {
+    if(input == nullptr) {
+      return NanNull();
+    }
+    return <%=typeIdentifier(type)%>_wrapper::createSafe(TYPE_LITERAL("<%=typeString(type)%>"), input, deleter);
+  }
+<% } else { %>
+  template<>
+  auto getArgument<<%=typeString(type)%>>(v8::Local<v8::Value> obj) -> <%=typeString(type)%> {
+    return nullptr;
+  }
+
+
+  static NAN_METHOD(<%=typeIdentifier(type)%>_handler) {
+    try {
+      v8::Local<v8::Object> thisValue = args.This();
+      auto functionPointer = node::ObjectWrap::Unwrap<FunctionWrap<<%=typeString(type)%>>>(thisValue)->get();
+      <% var obj = type; %>
+      <% var callObject = "functionPointer" %>
+      <%@ call.fts (obj,callObject) %>
+
+    } catch(const std::exception& e) {
+      NanThrowError(v8::Exception::Error(NanNew<v8::String>(e.what())));
+      NanReturnUndefined();
+    } catch(...) {
+      NanThrowError(v8::Exception::Error(NanNew<v8::String>("Unknown exception thrown in native code")));
+      NanReturnUndefined();
+    }
+  }
+
+  v8::Handle<v8::Value> toV8Type_<%=typeIdentifier(type)%> (<%=typeString(type, {
+      param: 'input'
+    })%>, std::function<void(<%=typeString(type)%>)> deleter = nullptr) {
+    if(input == nullptr) {
+      return NanNull();
+    }
+    return <%=typeIdentifier(type)%>_wrapper::create("<%=typeString(type)%>", input, <%=typeIdentifier(type)%>_handler, deleter);
+  }
+<% } %>
+
+<% if(type.type.pointer && type.type.nonPrimitive) { %>
+
+  v8::Handle<v8::Value> toV8Type_<%=typeIdentifier(type, '*')%> (<%=typeString(type, '*')%>& input, std::function<void(<%=typeString(type, '*')%>&)> deleter = nullptr) {
+    <%= typeString(type)%> ptr = new <%=typeIdentifier(type, '*')%> (input);
+    return <%=typeIdentifier(type)%>_wrapper::create(ptr, [=](<%=typeString(type)%>) {
+      deleter(*ptr);
+      delete ptr;
+    });
+  }
+
+  template<>
+  <%=typeString(type, '*')%> getArgument<<%=typeString(type, '*')%>>(v8::Local<v8::Value> obj) {
+    return *getArgument<<%=typeString(type)%>>(obj);
+  }
+
+<% } %>
