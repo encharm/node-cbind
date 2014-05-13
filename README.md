@@ -1,4 +1,4 @@
-node-cbind
+![node-cbind](https://raw.githubusercontent.com/CodeCharmLtd/node-cbind/master/cbind.png) for Node.js
 =========
 [![Build Status](https://travis-ci.org/CodeCharmLtd/node-cbind.svg?branch=master)](https://travis-ci.org/CodeCharmLtd/node-cbind)
 
