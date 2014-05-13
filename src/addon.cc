@@ -45,4 +45,4 @@ void init(v8::Handle<v8::Object> exports) {
   cbind::init_core(exports);
 }
 
-NODE_MODULE(tov8_core, init);
+NODE_MODULE(cbind_core, init);
