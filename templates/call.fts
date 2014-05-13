@@ -15,27 +15,23 @@
   }).join(", ");
 %>
   
-  <% var returnType = (obj.functionPointer) ? 
+<% var returnType = (obj.functionPointer) ? 
     typeIdentifier(obj.type) : typeIdentifier(obj); %>
-  <% console.log(returnType); %>
 
-<% if(returnType == 'void') { %>
+
+<% var returnValues = {}; %>
+
+v8::Local<v8::Value> v8_retValue;
+
+<% if(returnType === 'void') { %>
   <%= callObject%>(<%= parametersForCall%>);
 
-  <% if(outputParameters.length === 1) { /* handle more output parameters */  %>
-
-
-    NanReturnValue(toV8Type_<%=typeIdentifier(outputParameters[0].type)%>(<%=outputParameters[0].name%>));
-
-  <% } else { %>
-    NanReturnUndefined();
-  <% } %>
 <% } else { %>
   auto retValue = <%=callObject%>(<%= parametersForCall%>);
   
   <% obj.attributes = obj.attributes || {}; %>
 
-  NanReturnValue(toV8Type_<%= returnType %>(retValue
+  v8_retValue= toV8Type_<%= returnType %>(retValue
     <% if(obj.attributes.free) { %>
       , [=](<%=typeString(obj)%> obj) {
       <% if(obj.attributes.free === true) { %>
@@ -45,10 +41,25 @@
       <% } else { %>
         <%=obj.attributes.free%>(obj);
       <% } %>
-      })
+      });
     <% } else { %>
 
-      )
+      );
     <% } %>
-  );
 <% } %>
+
+<% if(outputParameters.length === 1 && returnType === 'void') { /* handle more output parameters */  %>
+  v8_retValue = toV8Type_<%=typeIdentifier(outputParameters[0].type)%>(<%=outputParameters[0].name%>);
+
+<% } else if(outputParameters.length >= 1) { %>
+  auto __retObject = NanNew<v8::Object>();
+
+  <% outputParameters.forEach(function(outputParameter) { %>
+    <% console.log(outputParameter); %>
+    __retObject->Set(NanSymbol("<%=outputParameter.parameter.name%>"), toV8Type_<%=typeIdentifier(outputParameter.type)%>(<%=outputParameter.name%>));
+  <% }); %>
+  __retObject->Set(NanSymbol("retValue"), v8_retValue);
+  v8_retValue = __retObject;
+<% } %>
+
+NanReturnValue(v8_retValue);

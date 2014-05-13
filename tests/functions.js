@@ -133,9 +133,14 @@ describe('basic functions support', function() {
   });
 
   // not working yet
-  // it('should call function char*(int, float, double, const char*, std::string) that automatically frees result after conversion to v8', function() {
-  //   var args = [9219, 35, 4444, 'eenie', 'meenie'];
-  //   functions.functionConcat4.apply(null, args).should.equal(args.join(',').length);
-  // });
+  it('should call function char*(int, float, double, const char*, std::string) that automatically frees result after conversion to v8', function() {
+    var args = [9219, 35, 4444, 'eenie', 'meenie'];
+    var expected = args.join(',');
+    assert.deepEqual(functions.functionConcat4.apply(null, args),
+    {
+      out: expected,
+      retValue: expected.length
+    });
+  });
 
 });
