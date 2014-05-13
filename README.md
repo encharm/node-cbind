@@ -62,8 +62,9 @@ int fclose(FILE* f [[clear_free,unref]]);
 * Handling class/struct variables and methods.
 * Passing struct and class pointers to arbitrary functions.
 
-## Planned features
+## Planned features / Not supported yet
 
+* Function overloading.
 * Attributes for calling native code asynchronously and returning values as promises (bluebird).
 * Attributes for automatically handling native callbacks that have returned from a separate thread.
 
