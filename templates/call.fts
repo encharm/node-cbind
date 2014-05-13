@@ -21,7 +21,7 @@
 
 <% var returnValues = {}; %>
 
-v8::Local<v8::Value> v8_retValue;
+v8::Handle<v8::Value> v8_retValue;
 
 <% if(returnType === 'void') { %>
   <%= callObject%>(<%= parametersForCall%>);
