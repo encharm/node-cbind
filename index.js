@@ -89,7 +89,7 @@ function processType(obj, options) {
   if(!processedTypes[typeIdent]) {
     console.log("Adding type", typeIdent);
 
-    obj.ifdefIdentifier = 'TOV8_HELPER_' + typeIdent.toUpperCase();
+    obj.ifdefIdentifier = 'CBIND_HELPER_' + typeIdent.toUpperCase();
   }
   else {
     console.log("Type exists", typeIdent);
@@ -154,9 +154,9 @@ function processNidFile(file) {
   var defs = fs.readFileSync(file);
   var base = path.basename(file);
   var baseName = path.basename(file, '.nid');
-  var outHeader = path.join('build', 'tov8_' + baseName + '.h');
+  var outHeader = path.join('build', 'cbind_' + baseName + '.h');
 
-  var outGypi = path.join('build', 'tov8.gypi');
+  var outGypi = path.join('build', 'cbind.gypi');
 
   var parser;
   try {
@@ -267,7 +267,7 @@ module.exports = function() {
 }
 var defs = {};
 try {
-  defs = require('./build/Release/tov8_core.node')
+  defs = require('./build/Release/cbind_core.node')
 } catch(err) {
 }
 

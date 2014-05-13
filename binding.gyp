@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target_name": "tov8_core",
+      "target_name": "cbind_core",
       "sources": [
         "src/addon.cc"
       ],

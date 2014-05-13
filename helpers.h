@@ -14,6 +14,21 @@
     }
   };
 
+  
+  template<class T>
+  class AsyncFunctionWrap : public NanAsyncWorker {
+    std::function<T()> func;
+  public:
+    AsyncFunctionWrap(std::function<T()> _func) : func(_func) {
+
+    }
+    virtual void Execute() final {
+      T retValue = func();
+
+    }
+
+
+  };
 
   template<class T>
   class FunctionWrap : public node::ObjectWrap {
@@ -28,10 +43,8 @@
   public:
 
     static T nativeFromV8(v8::Handle<v8::Value> obj, const char* typeId, v8::Persistent<v8::Function>& persistent, T cbNative) {
-      printf("<< Native from v8!!\n");
       if(!obj->IsFunction())
         throw v8_exception("Argument needs to be a Function");
-      printf(">> Native from v8: %s!!\n", typeId);
       v8::Local<v8::Function> func = obj.As<v8::Function>();
       NanAssignPersistent(persistent, func);
 
@@ -45,6 +58,7 @@
 
       v8::Local<v8::Object> prototype = fun->GetPrototype().As<v8::Object>();
 
+      // this can be cached
       v8::Local<v8::Function> bind = prototype->Get(NanSymbol("bind")).As<v8::Function>();
       
       v8::Local<v8::ObjectTemplate> objTpl = v8::ObjectTemplate::New();
@@ -55,12 +69,13 @@
 
       v8::Handle<v8::Value> argv[1] = {obj};
 
-      fun = bind->Call(fun, 1, argv).As<v8::Function>();
+      // note this can be much improved in terms of performance, for example
+      // by using internal fields with pointers
+      fun = NanMakeCallback(fun, bind, 1, argv).As<v8::Function>();
 
       fun->Set(NanSymbol("__tov8_wrapped_data"), obj);
 
       fun->Set(NanSymbol("nativeInterface"), NanNew<v8::String>(typeId));
-      printf("Returning function %s\n", typeId);
 
       return fun;
     }
@@ -72,6 +87,12 @@
       if(deleter)
         deleter(m_handle);
     }
+
+    static T Unwrap(v8::Handle<v8::Object> obj, const char* typeId = NULL) {
+
+      return node::ObjectWrap::Unwrap<FunctionWrap<T>>(obj)->get();
+    }
+
 
     T get() const {
       return m_handle;
@@ -98,7 +119,6 @@
       objTpl->SetInternalFieldCount(2);
 
       v8::Local<v8::Object> obj = objTpl->NewInstance();
-//      obj->Set(NanNew<v8::String>("tov8Type"), NanNew<v8::String>(typeString.c_str()));
 
       NanSetInternalFieldPointer(obj, 1, (void*)typeString);
 
@@ -119,14 +139,14 @@
         deleter(m_handle);
     }
 
-    static T Unwrap(v8::Handle<v8::Object> obj, const char* key = NULL) {
+    static T Unwrap(v8::Handle<v8::Object> obj, const char* typeId = NULL) {
       void *typeStringPtr = (obj->InternalFieldCount() == 2)?NanGetInternalFieldPointer(obj, 1):nullptr;
       if(!typeStringPtr) {
         throw v8_exception("Unable to unbox pointer from object, not created by tov8");
       }
-      if(key) {
-        if(strcmp(key, (char*)typeStringPtr) != 0) {
-          throw v8_exception(std::string("Unable to unbox pointer ") + key + " from pointer of type " + (const char*)typeStringPtr);
+      if(typeId) {
+        if(strcmp(typeId, (char*)typeStringPtr) != 0) {
+          throw v8_exception(std::string("Unable to unbox pointer ") + typeId + " from pointer of type " + (const char*)typeStringPtr);
         }
       }
       return node::ObjectWrap::Unwrap<HandleWrap<T>>(obj)->get();
@@ -301,11 +321,13 @@ template<typename T>
     return NanCString(obj, &count);
   }
   
-  v8::Handle<v8::Value> toV8Type_const_char_ptr(const char* input) {
+  v8::Handle<v8::Value> toV8Type_const_char_ptr(const char* input, std::function<void(const char*)> deleter = [](const char*){}) {
     if(!input) {
       return NanNull();
     }
-    return NanNew<v8::String>(input);
+    auto val = NanNew<v8::String>(input);
+    deleter(input);
+    return val;
   }
 
 
@@ -322,8 +344,13 @@ template<typename T>
     return NanCString(obj, &count);
   }
   
-  v8::Handle<v8::Value> toV8Type_char_ptr(char* input) {
-    return NanNew<v8::String>(input);
+  v8::Handle<v8::Value> toV8Type_char_ptr(char* input, std::function<void(char*)> deleter = [](char*){}) {
+    if(!input) {
+      return NanNull();
+    }
+    auto val = NanNew<v8::String>(input);
+    deleter(input);
+    return val;
   }
 
 

@@ -1,6 +1,6 @@
-var tov8 = require('../build/Debug/tov8_core.node');
+var cBind = require('../build/Debug/cbind_core.node');
 
-var variables = tov8.variables;
+var variables = cBind.variables;
 
 var mocha = require('mocha');
 
@@ -112,27 +112,27 @@ describe('basic global variables support', function() {
   });
 
   it('should set int* from number', function() {
-    variables.globalPointerToInt = tov8.createInt(42);
-    tov8.derefInt(variables.globalPointerToInt).should.equal(42);
+    variables.globalPointerToInt = cBind.createInt(42);
+    cBind.derefInt(variables.globalPointerToInt).should.equal(42);
     variables.verifyPointerToInt42().should.equal(true);
   });
 
   it('should set float* from number', function() {
-    variables.globalPointerToFloat = tov8.createFloat(43);
-    tov8.derefFloat(variables.globalPointerToFloat).should.equal(43);
+    variables.globalPointerToFloat = cBind.createFloat(43);
+    cBind.derefFloat(variables.globalPointerToFloat).should.equal(43);
     variables.verifyPointerToFloat43().should.equal(true);
   });
 
   it('should set double* from number', function() {
-    variables.globalPointerToDouble = tov8.createDouble(44);
-    tov8.derefDouble(variables.globalPointerToDouble).should.equal(44);
+    variables.globalPointerToDouble = cBind.createDouble(44);
+    cBind.derefDouble(variables.globalPointerToDouble).should.equal(44);
     variables.verifyPointerToDouble44().should.equal(true);
   });
 
   it('should fail to dereference float type from double type', function() {
 
     try {
-      tov8.derefFloat(variables.globalPointerToDouble).should.equal(44);
+      cBind.derefFloat(variables.globalPointerToDouble).should.equal(44);
     } catch(err) {
       err.message.should.equal("Unable to unbox pointer float* from pointer of type double*");
     }

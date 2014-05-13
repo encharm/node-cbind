@@ -6,7 +6,7 @@
 #include <functional>
 #include <exception>
 
-namespace tov8 {
+namespace cbind {
   #include "helpers.h"
 
   <% processedTypes.forEach(function(type) { 

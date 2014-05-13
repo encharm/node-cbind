@@ -1,0 +1,35 @@
+// there is a bug in handling names typeFunction(),
+// void/int whatever is eaten by parser
+void _voidFunction();
+int _intFunction();
+float _floatFunction();
+double _doubleFunction();
+const char* cStringFunction();
+std::string stdStringFunction();
+
+// arguments passing
+int functionTakingInt(int a);
+float functionTakingFloat(float a);
+double functionTakingDouble(double a);
+
+const char* functionTakingCString(const char* a);
+std::string functionTakingStdString(std::string a);
+
+
+std::string functionConcat(int a, float b, double d, const char* str, std::string str2);
+
+// free attribute instructs cbind on how to dispose of the result after converting value to v8 type
+[[free(custom_free)]] char* functionConcat2(int a, float b, double d, const char* str, std::string str2);
+
+// function that outputs result using passed in buffer
+// special attributes instruct cbind how to call this function and extract return value
+void functionConcat3(int a, float b, double d, const char* str, std::string str2, char* out [[out,string(4096)]], size_t outLength [[set(4096)]]);
+
+// in this case there are two return values which
+// will be returned in the form of an object
+int functionConcat4(int a, float b, double d, const char* str, std::string str2, char* out [[out,string(4096)]], size_t outLength [[set(4096)]]);
+
+// test helpers
+int callCounter;
+int getCounter();
+void resetTestData();
