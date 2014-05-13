@@ -131,3 +131,26 @@ The above is in the repository https://github.com/CodeCharmLtd/cbind-example
 
 
 Please open issues or follow example tests. README will be gradually expanded.
+
+
+## Special thanks
+
+https://github.com/celer/fire-ts - awesome templates for code generation
+
+
+<a name="authors"/>
+## Authors
+* Damian Kaczmarek <damian@codecharm.co.uk> <rush@rushbase.net>
+
+<a name="sponsors"/>
+## Sponsors
+Please open an issue if you would like a specific feature to be implemented and sponsored.
+
+<a name="license"/>
+## License
+Copyright (c) 2013-2014 [Code Charm Ltd](http://codecharm.co.uk)
+
+Licensed under the MIT license, see `LICENSE` for details.
+
+
+
