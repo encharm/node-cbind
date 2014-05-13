@@ -64,7 +64,7 @@
 
   <% if(parameter.attributes.string) { %>
 
-    <%=typeWithoutPtr%> arg<%=i%>_container[<%=parameter.attributes.string%>];
+    <%=typeWithoutPtr%> arg<%=i%>_container[<%=parameter.attributes.string%>] = {0,};
     <%=typeString(parameter)%> arg<%=i%> = arg<%=i%>_container;
 
     <% typeOfOutputParameter = typeString(parameter); %>

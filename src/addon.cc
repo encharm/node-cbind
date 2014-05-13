@@ -25,6 +25,7 @@ T deref(T* in) {
 
 #include <tests/variables.cc>
 #include <tests/functions.cc>
+#include <tests/clib.cc>
 
 #endif
 
@@ -40,6 +41,7 @@ void init(v8::Handle<v8::Object> exports) {
   #ifdef DEBUG
   INIT_TEST(variables)
   INIT_TEST(functions)
+  INIT_TEST(clib)
   #endif
 
   cbind::init_core(exports);

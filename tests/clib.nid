@@ -1,0 +1,15 @@
+#include <stdio.h>
+#include <errno.h>
+
+int errno;
+
+FILE * [[free(fclose)]] fopen(const char* filename, const char* mode);
+
+
+// will accept (Buffer, size of object)
+size_t fread(void* ptr [[buffer]], size_t size, size_t nmemb [[set(ptr.length / size)]], FILE* stream [[handle]]);
+
+[[rename(freadString)]]
+size_t fread(char* text [[out,string(64)]], size_t size [[set(1)]], size_t nmemb [[set(63)]], FILE* stream [[handle]]);
+
+int fclose(FILE* f [[clear_free,unref]]);
