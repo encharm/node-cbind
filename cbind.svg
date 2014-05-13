@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="39.999996"
-   height="22.790262"
+   width="175.51353"
+   height="99.999992"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="Nowy dokument 1">
+   sodipodi:docname="cbind.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -25,7 +25,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="7.9195959"
-     inkscape:cx="32.195421"
+     inkscape:cx="32.195414"
      inkscape:cy="25.700477"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -55,33 +55,33 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-108.62539,-347.91427)">
+     transform="translate(-108.62539,-270.70453)">
     <text
        xml:space="preserve"
-       style="font-size:16.18171691999999950px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#8ac82d;fill-opacity:1;stroke:none;font-family:Museo;-inkscape-font-specification:Museo"
-       x="114.91084"
-       y="364.36636"
+       style="font-size:71.00276947px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#8ac82d;fill-opacity:1;stroke:none;font-family:Museo;-inkscape-font-specification:Museo"
+       x="136.20494"
+       y="342.89368"
        id="text2989"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan2991"
-         x="114.91084"
-         y="364.36636"><tspan
+         x="136.20494"
+         y="342.89368"><tspan
    style="fill:#4d4d4d"
    id="tspan5328">b</tspan>i<tspan
    style="fill:#4d4d4d"
    id="tspan5330">nd</tspan></tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:31.22037315000000035px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#4d4d4d;fill-opacity:1;stroke:none;font-family:Museo;-inkscape-font-specification:Museo"
-       x="107.57353"
-       y="370.32343"
+       style="font-size:136.98995972px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#4d4d4d;fill-opacity:1;stroke:none;font-family:Museo;-inkscape-font-specification:Museo"
+       x="104.01001"
+       y="369.03229"
        id="text2985"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan2987"
-         x="107.57353"
-         y="370.32343"
+         x="104.01001"
+         y="369.03229"
          style="fill:#4d4d4d;fill-opacity:1">C</tspan></text>
   </g>
 </svg>
