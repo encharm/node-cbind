@@ -1,6 +1,9 @@
-node-cbind
-=========
+node-![cbind](https://raw.githubusercontent.com/CodeCharmLtd/node-cbind/master/cbind.png)
+==============
 [![Build Status](https://travis-ci.org/CodeCharmLtd/node-cbind.svg?branch=master)](https://travis-ci.org/CodeCharmLtd/node-cbind)
+[![Package version](https://img.shields.io/npm/v/cbind.svg)](https://www.npmjs.org/package/cbind)
+[![Package version](https://img.shields.io/npm/dm/cbind.svg)](https://www.npmjs.org/package/cbind)
+[![Dependcies status](http://img.shields.io/gemnasium/CodeCharmLtd/node-cbind.svg)](https://gemnasium.com/CodeCharmLtd/node-cbind)
 
 Streamlined automatic C/C++ v8 bindings generator for Node.JS inspired by tolua++ (requires C++11)
 
@@ -131,3 +134,26 @@ The above is in the repository https://github.com/CodeCharmLtd/cbind-example
 
 
 Please open issues or follow example tests. README will be gradually expanded.
+
+
+## Special thanks
+
+https://github.com/celer/fire-ts - awesome templates for code generation
+
+
+<a name="authors"/>
+## Authors
+* Damian Kaczmarek <damian@codecharm.co.uk> <rush@rushbase.net>
+
+<a name="sponsors"/>
+## Sponsors
+Please open an issue if you would like a specific feature to be implemented and sponsored.
+
+<a name="license"/>
+## License
+Copyright (c) 2013-2014 [Code Charm Ltd](http://codecharm.co.uk)
+
+Licensed under the MIT license, see `LICENSE` for details.
+
+
+
