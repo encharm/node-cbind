@@ -241,9 +241,11 @@ function processNidFile(file) {
 
   var buildDir = path.resolve('build');
 
-  fs.createReadStream(path.join(__dirname, 'helpers.h')).pipe(
-    fs.createWriteStream(path.join(buildDir, 'helpers.h'))
-  );
+  ['helpers.h', 'type_literal.h'].forEach(function(header) {
+    fs.createReadStream(path.join(__dirname, header)).pipe(
+      fs.createWriteStream(path.join(buildDir, header))
+    );
+  });
   
   //fs.writeFileSync(outHeader, '');
   fs.writeFile(outHeader, headerContent);
