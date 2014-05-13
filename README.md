@@ -1,4 +1,4 @@
-node-tov8
+node-cbind
 =========
 [![Build Status](https://travis-ci.org/CodeCharmLtd/node-cbind.svg?branch=master)](https://travis-ci.org/CodeCharmLtd/node-tov8)
 
