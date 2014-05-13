@@ -17,7 +17,7 @@ struct Rect {
   int y;
   int w;
   int h;
-}
+};
 bool rectangles_intersect(Rect a, Rect b);
 
 ```
