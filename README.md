@@ -1,6 +1,9 @@
 node-![cbind](https://raw.githubusercontent.com/CodeCharmLtd/node-cbind/master/cbind.png)
 ==============
 [![Build Status](https://travis-ci.org/CodeCharmLtd/node-cbind.svg?branch=master)](https://travis-ci.org/CodeCharmLtd/node-cbind)
+[![Package version](https://img.shields.io/npm/v/cbind.svg)](https://www.npmjs.org/package/http-master)
+[![Package version](https://img.shields.io/npm/dm/cbind.svg)](https://www.npmjs.org/package/http-master)
+[![Dependcies status](http://img.shields.io/gemnasium/CodeCharmLtd/node-cbind.svg)](https://gemnasium.com/CodeCharmLtd/http-master)
 
 Streamlined automatic C/C++ v8 bindings generator for Node.JS inspired by tolua++ (requires C++11)
 
