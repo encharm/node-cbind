@@ -1,4 +1,4 @@
-![node-cbind](https://raw.githubusercontent.com/CodeCharmLtd/node-cbind/master/cbind.png)
+node-![cbind](https://raw.githubusercontent.com/CodeCharmLtd/node-cbind/master/cbind.png)
 ==============
 [![Build Status](https://travis-ci.org/CodeCharmLtd/node-cbind.svg?branch=master)](https://travis-ci.org/CodeCharmLtd/node-cbind)
 
