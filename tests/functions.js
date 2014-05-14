@@ -21,10 +21,10 @@ describe('native module', function() {
   it('should export proper API', function() {
     assert.deepEqual(typeofObject(functions), {
       callCounter: 'number',
-      _doubleFunction: 'function',
-      _floatFunction: 'function',
-      _intFunction: 'function',
-      _voidFunction: 'function',
+      doubleFunction: 'function',
+      floatFunction: 'function',
+      intFunction: 'function',
+      voidFunction: 'function',
       cStringFunction: 'function',
       stdStringFunction: 'function',
       functionTakingInt: 'function',
@@ -65,18 +65,18 @@ describe('basic functions support', function() {
   });
 
   it('should call void()', function() {
-    functions._voidFunction();
+    functions.voidFunction();
   });
   it('should call int()', function() {
-    functions._intFunction().should.equal(42);
+    functions.intFunction().should.equal(42);
   });
 
   it('should call float()', function() {
-    functions._floatFunction().should.equal(42);
+    functions.floatFunction().should.equal(42);
   });
 
   it('should call double()', function() {
-    functions._doubleFunction().should.equal(42);
+    functions.doubleFunction().should.equal(42);
   });
 
   it('should call const char*()', function() {

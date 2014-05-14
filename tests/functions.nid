@@ -1,9 +1,9 @@
 // there is a bug in handling names typeFunction(),
 // void/int whatever is eaten by parser
-void _voidFunction();
-int _intFunction();
-float _floatFunction();
-double _doubleFunction();
+void voidFunction();
+int intFunction();
+float floatFunction();
+double doubleFunction();
 const char* cStringFunction();
 std::string stdStringFunction();
 

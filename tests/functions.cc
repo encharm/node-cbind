@@ -2,21 +2,21 @@
 
 int callCounter = 0;
 
-void _voidFunction() {
+void voidFunction() {
   callCounter++;
 }
 
-int _intFunction() {
+int intFunction() {
   callCounter++;
   return 42;
 }
 
-float _floatFunction() {
+float floatFunction() {
   callCounter++;
   return 42.0;
 }
 
-double _doubleFunction() {
+double doubleFunction() {
   callCounter++;
   return 42.0;
 }
