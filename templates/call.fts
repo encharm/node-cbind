@@ -29,23 +29,35 @@ v8::Handle<v8::Value> v8_retValue;
 <% } else { %>
   auto retValue = <%=callObject%>(<%= parametersForCall%>);
   
+  <% console.log("KOSMOS", obj); %>
+
   <% obj.attributes = obj.attributes || {}; %>
 
-  v8_retValue= toV8Type_<%= returnType %>(retValue
-    <% if(obj.attributes.free) { %>
-      , [=](<%=typeString(obj)%> obj) {
-      <% if(obj.attributes.free === true) { %>
-        free(obj);
-      <% } else if(obj.attributes.free === 'delete') { %>
-        delete obj;
-      <% } else { %>
-        <%=obj.attributes.free%>(obj);
-      <% } %>
-      });
-    <% } else { %>
+  <% if(!obj.type.functionPointer) { %>
 
-      );
-    <% } %>
+    v8_retValue = toV8Type_<%= returnType %>(retValue
+      <% if(obj.attributes.free) { %>
+        , [=](<%=typeString(obj)%> obj) {
+        <% if(obj.attributes.free === true) { %>
+          free(obj);
+        <% } else if(obj.attributes.free === 'delete') { %>
+          delete obj;
+        <% } else { %>
+          <%=obj.attributes.free%>(obj);
+        <% } %>
+        });
+      <% } else { %>
+
+        );
+      <% } %>
+  <% } else { %>
+
+    <% console.log("SATURN"); %>
+
+    v8_retValue = FunctionWrap<decltype(retValue)>::create("<%=typeString(obj.type, {forceParams: true})%>", retValue, <%=typeIdentifier(obj.type, {forceParams: true}) %>_handler);
+
+
+  <% } %>
 <% } %>
 
 <% if(outputParameters.length === 1 && returnType === 'void') { /* handle more output parameters */  %>

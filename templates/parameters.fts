@@ -37,7 +37,7 @@
           }).join(","); %>
 
         v8::Handle<v8::Value> args[] = {<%=callArgs%>};
-        auto ret = NanMakeCallback(NanUndefined(), v8Func, <%=parameter.type.parameters.length%> ,args);
+        auto ret = NanMakeCallback(NanGetCurrentContext()->Global(), v8Func, <%=parameter.type.parameters.length%> ,args);
         return getArgument<<%=typeString(parameter.type, {onlyReturn: true})%>>(ret);
       });
     <% } else { %>

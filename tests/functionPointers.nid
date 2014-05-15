@@ -1,0 +1,8 @@
+
+
+void (*custom_print)(char* a, char* b, int c);
+
+
+void (*catch_and_return(void (*pf)(char* aarg, char* barg, int* ccarg), char *name_one, char* name_two, int* number))(char* a, char * b, int c); 
+
+//int (*some_callback)(int a, int b);

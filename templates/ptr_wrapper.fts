@@ -19,6 +19,8 @@
   }
 
 <% if(!type.functionPointer) { %>
+  // no function pointer!! <%= JSON.stringify(type) %>
+
   template<>
   auto getArgument<<%=typeString(type)%>>(v8::Local<v8::Value> obj) -> <%=typeString(type)%> {
     if(!obj->IsObject()) {

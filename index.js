@@ -58,10 +58,6 @@ function typeIdentifier(type, options) {
   return str.split(/\s+/).join('_');
 }
 
-
-
-
-
 console.log = console.warn;
 
 var processedTypes = {};
@@ -79,6 +75,8 @@ function processType(obj, options) {
     return;
   }
   var typeIdent = typeIdentifier(obj, options);
+
+  console.log("Process type ident", typeIdent);
 
   if(existingProcessedTypes[typeIdent]) {
     console.log("Skipping due to already existing");
@@ -100,7 +98,14 @@ function processType(obj, options) {
 }
 
 function processFunction(func) {
-  processType(func);
+  if(func.type.functionPointer) {
+    console.log("Processing return function pointer type", func.type);
+    processFunction(func.type);
+    console.log("End of processing return function pointer type");
+  }
+  else {
+    processType(func);
+  }
   if(func.parameters) {
     func.parameters.forEach(function(parameter) {
       processType(parameter);
