@@ -45,7 +45,7 @@ int fclose(FILE* f [[clear_free,unref]]);
 
 <a name="complex_weird_cases_function_pointer_handling">
 ## Complex weird cases function pointer handling
-Consider this definition (valid C!! - also valid NID):
+Consider this declaration (valid C and valid NID):
 ```c++
 void (*catch_and_return(void (*callback)(char* a, char* b, int* c), char *name_one, char* name_two, int* number))(char* a, char * b, int c); 
 ```
