@@ -43,6 +43,26 @@ int fclose(FILE* f [[clear_free,unref]]);
 ```
 
 
+## Complex weird cases function pointer handling
+Consider this definition (valid C!! - also valid NID):
+```c++
+void (*catch_and_return(void (*callback)(char* a, char* b, int* c), char *name_one, char* name_two, int* number))(char* a, char * b, int c); 
+```
+Do you know what it does? Actually it is a declaration of function taking 4 arguments:
+* `callback` - pointer to function `void(char* a, char* b, int* c)`
+* `name_one` - string
+* `name_two` - string
+* `number` - pointer to number
+
+This function returns another function pointer `void(char* a, char* b, int)`
+
+It turns out cbind can generate bindings for this that fully work:
+```js
+bindings.catch_and_return(function(a, b, c) {
+  console.log(a, b, cBind.derefInt(c));
+}, "str1", "str2", cBind.createInt(30))("FINAL", "TEST", 44);
+```
+
 
 ## Supported and tested features
 
