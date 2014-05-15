@@ -43,6 +43,7 @@ int fclose(FILE* f [[clear_free,unref]]);
 ```
 
 
+<a name="complex_weird_cases_function_pointer_handling">
 ## Complex weird cases function pointer handling
 Consider this definition (valid C!! - also valid NID):
 ```c++
