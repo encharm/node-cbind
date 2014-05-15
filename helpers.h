@@ -45,8 +45,8 @@
     static T nativeFromV8(v8::Handle<v8::Value> obj, const char* typeId, v8::Persistent<v8::Function>& persistent, T cbNative) {
       if(!obj->IsFunction())
         throw v8_exception("Argument needs to be a Function");
-      v8::Local<v8::Function> func = obj.As<v8::Function>();
-      NanAssignPersistent(persistent, func);
+      ;
+      NanAssignPersistent(persistent, obj.As<v8::Function>());
 
       return cbNative;
     }
@@ -71,7 +71,7 @@
 
       // note this can be much improved in terms of performance, for example
       // by using internal fields with pointers
-      fun = NanMakeCallback(fun, bind, 1, argv).As<v8::Function>();
+      fun = NanNew<v8::Function>(NanMakeCallback(fun, bind, 1, argv).As<v8::Function>());
 
       fun->Set(NanSymbol("__tov8_wrapped_data"), obj);
 
@@ -194,11 +194,11 @@
 // types
 
 template<typename T>
-  bool checkArgument(v8::Local<v8::Value> obj) {
+  bool checkArgument(v8::Handle<v8::Value> obj) {
     return true;
   }
   template<typename T>
-  T getArgument(v8::Local<v8::Value> obj) {
+  T getArgument(v8::Handle<v8::Value> obj) {
     return T();
   }
   template<typename T>
@@ -208,13 +208,13 @@ template<typename T>
 
   // type int
   template<>
-  bool checkArgument<int>(v8::Local<v8::Value> obj) {
+  bool checkArgument<int>(v8::Handle<v8::Value> obj) {
     if(!obj->IsNumber())
       return false;
     return true;
   }
   template<>
-  int getArgument<int>(v8::Local<v8::Value> obj) {
+  int getArgument<int>(v8::Handle<v8::Value> obj) {
     return obj->NumberValue();
   }
   
@@ -224,13 +224,13 @@ template<typename T>
 
   // type int
   template<>
-  bool checkArgument<bool>(v8::Local<v8::Value> obj) {
+  bool checkArgument<bool>(v8::Handle<v8::Value> obj) {
     if(!obj->IsBoolean())
       return false;
     return true;
   }
   template<>
-  bool getArgument<bool>(v8::Local<v8::Value> obj) {
+  bool getArgument<bool>(v8::Handle<v8::Value> obj) {
     return obj->BooleanValue();
   }
   
@@ -240,13 +240,13 @@ template<typename T>
 
   // type int
   template<>
-  bool checkArgument<size_t>(v8::Local<v8::Value> obj) {
+  bool checkArgument<size_t>(v8::Handle<v8::Value> obj) {
     if(!obj->IsNumber())
       return false;
     return true;
   }
   template<>
-  size_t getArgument<size_t>(v8::Local<v8::Value> obj) {
+  size_t getArgument<size_t>(v8::Handle<v8::Value> obj) {
     return obj->NumberValue();
   }
   
@@ -256,13 +256,13 @@ template<typename T>
 
   // type float
   template<>
-  bool checkArgument<float>(v8::Local<v8::Value> obj) {
+  bool checkArgument<float>(v8::Handle<v8::Value> obj) {
     if(!obj->IsNumber())
       return false;
     return true;
   }
   template<>
-  float getArgument<float>(v8::Local<v8::Value> obj) {
+  float getArgument<float>(v8::Handle<v8::Value> obj) {
     return obj->NumberValue();
   }
   
@@ -271,13 +271,13 @@ template<typename T>
   }
   // type double
   template<>
-  bool checkArgument<double>(v8::Local<v8::Value> obj) {
+  bool checkArgument<double>(v8::Handle<v8::Value> obj) {
     if(!obj->IsNumber())
       return false;
     return true;
   }
   template<>
-  double getArgument<double>(v8::Local<v8::Value> obj) {
+  double getArgument<double>(v8::Handle<v8::Value> obj) {
     return obj->NumberValue();
   }
  
@@ -287,13 +287,13 @@ template<typename T>
 
   // type string
   template<>
-  bool checkArgument<std::string>(v8::Local<v8::Value> obj) {
+  bool checkArgument<std::string>(v8::Handle<v8::Value> obj) {
     if(!obj->IsString())
       return false;
     return true;
   }
   template<>
-  std::string getArgument<std::string>(v8::Local<v8::Value> obj) {
+  std::string getArgument<std::string>(v8::Handle<v8::Value> obj) {
     size_t count;
     const char* str = NanCString(obj, &count);
     std::string out = std::string(str);
@@ -310,13 +310,13 @@ template<typename T>
 
   // type const char*
   template<>
-  bool checkArgument<const char*>(v8::Local<v8::Value> obj) {
+  bool checkArgument<const char*>(v8::Handle<v8::Value> obj) {
     if(!obj->IsString())
       return false;
     return true;
   }
   template<>
-  const char* getArgument<const char*>(v8::Local<v8::Value> obj) {
+  const char* getArgument<const char*>(v8::Handle<v8::Value> obj) {
     size_t count;
     return NanCString(obj, &count);
   }
@@ -333,13 +333,13 @@ template<typename T>
 
 
   template<>
-  bool checkArgument<char*>(v8::Local<v8::Value> obj) {
+  bool checkArgument<char*>(v8::Handle<v8::Value> obj) {
     if(!obj->IsString())
       return false;
     return true;
   }
   template<>
-  char* getArgument<char*>(v8::Local<v8::Value> obj) {
+  char* getArgument<char*>(v8::Handle<v8::Value> obj) {
     size_t count;
     return NanCString(obj, &count);
   }

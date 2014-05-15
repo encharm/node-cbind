@@ -10,7 +10,7 @@
   <% } %>
 
   template<>
-  bool checkArgument<<%=typeString(type)%>>(v8::Local<v8::Value> obj) {
+  bool checkArgument<<%=typeString(type)%>>(v8::Handle<v8::Value> obj) {
     if(!obj->IsObject()) {
       throw v8_exception("Trying to use non-object as boxed type: <%=typeString(type)%>");
       return false;
@@ -22,7 +22,7 @@
   // no function pointer!! <%= JSON.stringify(type) %>
 
   template<>
-  auto getArgument<<%=typeString(type)%>>(v8::Local<v8::Value> obj) -> <%=typeString(type)%> {
+  auto getArgument<<%=typeString(type)%>>(v8::Handle<v8::Value> obj) -> <%=typeString(type)%> {
     if(!obj->IsObject()) {
       throw v8_exception("Expected object as argument");;
     }
@@ -33,7 +33,7 @@
     return ptr;
   }
   
-  void clear_free_<%=typeIdentifier(type)%> (v8::Local<v8::Value> obj) {
+  void clear_free_<%=typeIdentifier(type)%> (v8::Handle<v8::Value> obj) {
     node::ObjectWrap::Unwrap<<%=typeIdentifier(type)%>_wrapper>(obj.As<v8::Object>())->clear_free(); 
   }
 
@@ -47,12 +47,13 @@
   }
 <% } else { %>
   template<>
-  auto getArgument<<%=typeString(type)%>>(v8::Local<v8::Value> obj) -> <%=typeString(type)%> {
+  auto getArgument<<%=typeString(type)%>>(v8::Handle<v8::Value> obj) -> <%=typeString(type)%> {
     return nullptr;
   }
 
 
   static NAN_METHOD(<%=typeIdentifier(type)%>_handler) {
+    NanScope();
     try {
       v8::Local<v8::Object> thisValue = args.This();
       auto functionPointer = node::ObjectWrap::Unwrap<FunctionWrap<<%=typeString(type)%>>>(thisValue)->get();
@@ -90,7 +91,7 @@
   }
 
   template<>
-  <%=typeString(type, '*')%> getArgument<<%=typeString(type, '*')%>>(v8::Local<v8::Value> obj) {
+  <%=typeString(type, '*')%> getArgument<<%=typeString(type, '*')%>>(v8::Handle<v8::Value> obj) {
     return *getArgument<<%=typeString(type)%>>(obj);
   }
 
