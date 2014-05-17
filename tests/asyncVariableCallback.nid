@@ -1,0 +1,3 @@
+void (*cb)();
+
+void callbackAfterMs(int ms);

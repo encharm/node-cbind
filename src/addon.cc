@@ -27,6 +27,7 @@ T deref(T* in) {
 #include <tests/functions.cc>
 #include <tests/clib.cc>
 #include <tests/functionPointers.cc>
+#include <tests/asyncVariableCallback.cc>
 
 #endif
 
@@ -43,6 +44,7 @@ void init(v8::Handle<v8::Object> exports) {
   INIT_TEST(variables)
   INIT_TEST(functions)
   INIT_TEST(functionPointers)
+  INIT_TEST(asyncVariableCallback)
   INIT_TEST(clib)
   #endif
 

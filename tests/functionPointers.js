@@ -36,4 +36,16 @@ describe('function pointers', function() {
     customPrintCalled.should.equal(true);
 
   });
+
+  it('should get the same object after setting to the variable', function() {
+
+    var f = function(a, b, c) {};
+
+    functionPointers.custom_print = f;
+
+    functionPointers.custom_print.should.equal(f);
+
+
+
+  });
 });

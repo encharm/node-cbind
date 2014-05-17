@@ -38,6 +38,8 @@ static NAN_GETTER(v8_getter_<%= variable.name%>) {
 
 <% } else { %>
 
+static v8::Persistent<v8::Function> v8_<%=variable.name%>_persistent;
+static decltype(<%= variable.name %>) v8_<%=variable.name%>_saved;
 
 static NAN_SETTER(v8_setter_<%= variable.name%>) {
 
@@ -46,21 +48,55 @@ static NAN_SETTER(v8_setter_<%= variable.name%>) {
     return;
   }
   else if(value->IsFunction()) {
-    static v8::Persistent<v8::Function> persistent;
-    
-    <%=variable.name%> = FunctionWrap<decltype(<%= variable.name%>)>::nativeFromV8(value, "<%=typeString(variable, {forceParams: true})%>", persistent,
+
+    <% var returnType = typeString(variable.type, {onlyReturn: true}); %>
+
+    // FIXME : not nice for multiple isolates - but can it be made better?
+    static std::thread::id initialThreadId;
+    initialThreadId = std::this_thread::get_id();
+
+    static std::function<<%=returnType%>()> realCallback;
+    static uv_async_t async_handle;
+    uv_async_init(uv_default_loop(), &async_handle, [](CBIND_UV_ASYNC_ARGS) {
+      realCallback();
+      uv_close((uv_handle_t*)&async_handle, NULL);
+    });
+
+    <%=variable.name%> = FunctionWrap<decltype(<%= variable.name%>)>::nativeFromV8(value, "<%=typeString(variable, {forceParams: true})%>", v8_<%=variable.name%>_persistent,
     []<%=typeString(variable, {onlyParameters: true,withNames: true})%> {
-      auto v8Func = NanNew(persistent);
-      <% var callArgs = variable.parameters.map(function(callParam) {
-        return "toV8Type_" + typeIdentifier(callParam) + '(' + callParam.name + ')';
 
-      }).join(","); %>
-      v8::Handle<v8::Value> args[] = {<%=callArgs%>};
-      v8::Local<v8::Value> ret = NanNew<v8::Value>(NanMakeCallback(NanGetCurrentContext()->Global(), v8Func, <%=variable.parameters.length%> ,args));
+      realCallback = [=] {
+        NanScope();
+        assert(initialThreadId == std::this_thread::get_id());
 
-      return getArgument<<%=typeString(variable.type, {onlyReturn: true})%>>(ret);
+        auto v8Func = NanNew(v8_<%=variable.name%>_persistent);
+        <% var callArgs = variable.parameters.map(function(callParam) {
+          return "toV8Type_" + typeIdentifier(callParam) + '(' + callParam.name + ')';
+
+        }).join(","); %>
+
+        v8::Handle<v8::Value> args[] = {<%=callArgs%>};
+        v8::Local<v8::Value> ret = NanNew<v8::Value>(NanMakeCallback(NanGetCurrentContext()->Global(), v8Func, <%=variable.parameters.length%> ,args));
+
+        realCallback = nullptr;
+
+        return getArgument<<%=returnType%>>(ret);
+      };
+
+      
+      if(std::this_thread::get_id() == initialThreadId) {
+        uv_close((uv_handle_t*)&async_handle, NULL);
+        return realCallback();
+      }
+      else {
+        uv_async_send(&async_handle);
+
+        return getArgument<<%=returnType%>>(); // return default value since we cannot have any meaningful return due to calling async
+      }
+      
     }
     );
+    v8_<%=variable.name%>_saved = <%=variable.name%>;
     return;
   }
   throw v8_exception("Trying to assign non-function to a function pointer variable of type <%=typeString(variable, {forceParams: true})%>");
@@ -69,6 +105,11 @@ static NAN_SETTER(v8_setter_<%= variable.name%>) {
 
 static NAN_GETTER(v8_getter_<%= variable.name%>) {
   NanScope();
+  // there is a function set by javascript, return the original function
+  if(v8_<%=variable.name%>_saved == <%=variable.name%>) {
+    NanReturnValue(NanNew(v8_<%=variable.name%>_persistent));
+  }
+  // otherwise wrap native handle
   NanReturnValue(FunctionWrap<decltype(<%= variable.name%>)>::create("<%=typeString(variable, {forceParams: true})%>", <%= variable.name%>, <%=typeIdentifier(variable, {forceParams: true}) %>_handler));
 }
 

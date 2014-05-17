@@ -3,6 +3,13 @@
 
   #include "type_literal.h" // TYPE_LITERAL macro for making aligned type string for boxing pointers
 
+
+#if (NODE_MODULE_VERSION > 0x000B)
+#define CBIND_UV_ASYNC_ARGS uv_async_t* handle
+#else
+#define CBIND_UV_ASYNC_ARGS uv_async_t* handle, int status
+#endif
+
   class v8_exception : public std::exception
   {
     std::string msg;
@@ -192,6 +199,11 @@
   };
 
 // types
+template<typename T>
+  T getArgument() {
+    return T();
+  }
+
 
 template<typename T>
   bool checkArgument(v8::Handle<v8::Value> obj) {

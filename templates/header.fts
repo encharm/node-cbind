@@ -5,6 +5,7 @@
 #include <string>
 #include <functional>
 #include <exception>
+#include <thread>
 
 namespace cbind {
   #include "helpers.h"
