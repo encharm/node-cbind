@@ -1,5 +1,6 @@
 <% if(!variable.functionPointer) { %>
 
+<% if(!variable.attributes.readonly) { %>
 static NAN_SETTER(v8_setter_<%= variable.name%>) {
   try {
 
@@ -7,7 +8,7 @@ static NAN_SETTER(v8_setter_<%= variable.name%>) {
       throw v8_exception("Cannot convert value to type: <%= typeString(variable, {forceParams: true}) %>");
     }
 
-    <%=variable.name%> = getArgument<<%=typeString(variable, {forceParams: true})%>>(value);
+    <%=variable.accessCode%> = getArgument<<%=typeString(variable, {forceParams: true})%>>(value);
 
     return;
   } catch(const std::exception& e) {
@@ -19,12 +20,13 @@ static NAN_SETTER(v8_setter_<%= variable.name%>) {
   }
   return;
 }
+<% } %>
 
 static NAN_GETTER(v8_getter_<%= variable.name%>) {
   NanScope();
   try {
 
-    NanReturnValue(toV8Type_<%= typeIdentifier(variable, {forceParams: true}) %>(<%=variable.name%>));
+    NanReturnValue(toV8Type_<%= typeIdentifier(variable, {forceParams: true}) %>(<%=variable.accessCode%>));
 
   } catch(const std::exception& e) {
     NanThrowError(v8::Exception::Error(NanNew<v8::String>(e.what())));
@@ -38,13 +40,16 @@ static NAN_GETTER(v8_getter_<%= variable.name%>) {
 
 <% } else { %>
 
+
+<% if(!variable.attributes.readonly) { %>
+
 static v8::Persistent<v8::Function> v8_<%=variable.name%>_persistent;
 static decltype(<%= variable.name %>) v8_<%=variable.name%>_saved;
 
 static NAN_SETTER(v8_setter_<%= variable.name%>) {
 
   if(value->IsNull()) {
-    <%= variable.name %> = nullptr;
+    <%= variable.accessCode %> = nullptr;
     return;
   }
   else if(value->IsFunction()) {
@@ -62,7 +67,7 @@ static NAN_SETTER(v8_setter_<%= variable.name%>) {
       uv_close((uv_handle_t*)&async_handle, NULL);
     });
 
-    <%=variable.name%> = FunctionWrap<decltype(<%= variable.name%>)>::nativeFromV8(value, "<%=typeString(variable, {forceParams: true})%>", v8_<%=variable.name%>_persistent,
+    <%=variable.accessCode%> = FunctionWrap<decltype(<%= variable.name%>)>::nativeFromV8(value, "<%=typeString(variable, {forceParams: true})%>", v8_<%=variable.name%>_persistent,
     []<%=typeString(variable, {onlyParameters: true,withNames: true})%> {
 
       realCallback = [=] {
@@ -102,15 +107,16 @@ static NAN_SETTER(v8_setter_<%= variable.name%>) {
   throw v8_exception("Trying to assign non-function to a function pointer variable of type <%=typeString(variable, {forceParams: true})%>");
   return;
 }
+<% } %>
 
 static NAN_GETTER(v8_getter_<%= variable.name%>) {
   NanScope();
   // there is a function set by javascript, return the original function
-  if(v8_<%=variable.name%>_saved == <%=variable.name%>) {
+  if(v8_<%=variable.name%>_saved == <%=variable.accessCode%>) {
     NanReturnValue(NanNew(v8_<%=variable.name%>_persistent));
   }
   // otherwise wrap native handle
-  NanReturnValue(FunctionWrap<decltype(<%= variable.name%>)>::create("<%=typeString(variable, {forceParams: true})%>", <%= variable.name%>, <%=typeIdentifier(variable, {forceParams: true}) %>_handler));
+  NanReturnValue(FunctionWrap<decltype(<%= variable.accessCode%>)>::create("<%=typeString(variable, {forceParams: true})%>", <%= variable.accessCode%>, <%=typeIdentifier(variable, {forceParams: true}) %>_handler));
 }
 
 <% } %>

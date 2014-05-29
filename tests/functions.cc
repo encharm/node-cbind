@@ -93,5 +93,11 @@ void resetTestData() {
   callCounter = 0;
 }
 
+namespace someNamespace {
+  int functionInNamespace() {
+    callCounter++;
+    return 99112331;
+  }
+}
 
 #include <cbind_functions.h>

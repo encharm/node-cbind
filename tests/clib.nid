@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <errno.h>
 
-int errno;
+int errno [[readonly,macro]];
 
 FILE * [[free(fclose)]] fopen(const char* filename, const char* mode);
 

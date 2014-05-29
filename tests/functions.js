@@ -37,7 +37,8 @@ describe('native module', function() {
       functionConcat3: 'function',
       functionConcat4: 'function',
       getCounter: 'function',
-      resetTestData: 'function'
+      resetTestData: 'function',
+      someNamespace: 'object'
     }, "expected cbind API");
   });
 });
@@ -141,6 +142,10 @@ describe('basic functions support', function() {
       out: expected,
       retValue: expected.length
     });
+  });
+
+  it('should call function in namespace', function() {
+    functions.someNamespace.functionInNamespace().should.equal(99112331);
   });
 
 });

@@ -68,6 +68,8 @@ var existingProcessedTypes = {
   'void_ptr': true
 };
 
+var namespaceTokens = [];
+
 function processType(obj, options) {
   console.log("Pre process type", obj);
   if(! obj.type.pointer && !(obj.functionPointer || obj.type.functionPointer )) {
@@ -98,6 +100,11 @@ function processType(obj, options) {
 }
 
 function processFunction(func) {
+  if(func.attributes.macro)
+    func.accessCode = func.name;
+  else
+    func.accessCode = namespaceTokens.concat([func.name]).join('::');
+
   if(func.type.functionPointer) {
     console.log("Processing return function pointer type", func.type);
     processFunction(func.type);
@@ -105,11 +112,12 @@ function processFunction(func) {
   }
   else {
     processType(func);
-  }
-  if(func.parameters) {
-    func.parameters.forEach(function(parameter) {
-      processType(parameter);
-    });
+  
+    if(func.parameters) {
+      func.parameters.forEach(function(parameter) {
+        processType(parameter);
+      });
+    }
   }
 }
 
@@ -121,6 +129,11 @@ function processVariable(_variable) {
   else {
     processType(_variable);
   }
+
+  if(_variable.attributes.macro)
+    _variable.accessCode = _variable.name;
+  else
+    _variable.accessCode = namespaceTokens.concat([_variable.name]).join('::');
 }
 
 function processClass(_class) {
@@ -132,6 +145,8 @@ function processClass(_class) {
 }
 
 function processNamespace(namespace) {
+  namespaceTokens.push(namespace.name);
+
   namespace.declarations.forEach(function(declaration) {
     if(declaration.namespace)
       processNamespace(declaration.namespace);
@@ -146,6 +161,8 @@ function processNamespace(namespace) {
     }
 
   });
+
+  namespaceTokens.pop();
 }
 
 function parseSet(setString, name2param)

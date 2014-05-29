@@ -21,3 +21,20 @@ bool verifyGlobalStdString46();
 bool verifyPointerToInt42();
 bool verifyPointerToFloat43();
 bool verifyPointerToDouble44();
+
+namespace testns {
+  int variableInNamespace;
+}
+
+namespace ns1 {
+  int var1;
+  namespace ns2 {
+    int var2;
+    namespace ns3 {
+      int var3;
+      namespace ns4 {
+        int var4;
+      }
+    }
+  }
+}

@@ -20,7 +20,9 @@ describe('basic global variables support', function() {
       globalStdString: variables.globalStdString,
       globalPointerToInt: variables.globalPointerToInt,
       globalPointerToFloat: variables.globalPointerToFloat,
-      globalPointerToDouble: variables.globalPointerToDouble
+      globalPointerToDouble: variables.globalPointerToDouble,
+      testns: variables.testns,
+      ns1: variables.ns1
     }, {
       globalInt: 0,
       globalFloat: 0,
@@ -29,7 +31,22 @@ describe('basic global variables support', function() {
       globalStdString: '',
       globalPointerToInt: null,
       globalPointerToFloat: null,
-      globalPointerToDouble: null
+      globalPointerToDouble: null,
+      testns: {
+        variableInNamespace: 0
+      },
+      ns1: {
+        var1: 1,
+        ns2 : {
+          var2: 2,
+          ns3 : {
+            var3: 3,
+            ns4: {
+              var4: 4
+            }
+          }
+        }
+      }
     });
 
     variables.verifyGlobalInt42().should.equal(false);

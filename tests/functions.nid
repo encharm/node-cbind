@@ -33,3 +33,7 @@ int functionConcat4(int a, float b, double d, const char* str, std::string str2,
 int callCounter;
 int getCounter();
 void resetTestData();
+
+namespace someNamespace {
+  int functionInNamespace();
+}

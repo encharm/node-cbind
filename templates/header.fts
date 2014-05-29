@@ -22,7 +22,8 @@ namespace cbind {
 
 
   <% var name = baseName; %>
-  <%@ namespace.fts (name)%>
+  <% var inNamespace = baseName; %>
+  <%@ namespace.fts (name,inNamespace)%>
 }
 
 #endif // TOV8_<%= baseName.toUpperCase() %>_H

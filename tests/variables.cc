@@ -3,6 +3,24 @@
 
 int globalInt;
 
+namespace testns {
+  int variableInNamespace;
+}
+
+namespace ns1 {
+  int var1 = 1;
+  namespace ns2 {
+    int var2 = 2;
+    namespace ns3 {
+      int var3 = 3;
+      namespace ns4 {
+        int var4 = 4;
+      }
+    }
+  }
+}
+
+
 bool verifyGlobalInt42() {
   return globalInt == 42;
 }

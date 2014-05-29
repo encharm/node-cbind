@@ -2,7 +2,7 @@ static NAN_METHOD(v8_<%= func.attributes.rename || func.name%>) {
   NanScope();
   try {
     <% var obj = func; %>
-    <% var callObject = obj.name; %>
+    <% var callObject = obj.accessCode; %>
     <%@ call.fts (obj,callObject) %>
 
   } catch(const std::exception& e) {
