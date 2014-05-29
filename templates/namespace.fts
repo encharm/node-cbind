@@ -30,30 +30,30 @@ static inline void init_<%=namespaceName%>(v8::Handle<v8::Object> exports) {
       <% var func = declaration['function']; %>
       {
         v8::Local<v8::FunctionTemplate> functionTemplate = NanNew<v8::FunctionTemplate>(<%=namespaceName%>::v8_<%= func.attributes.rename || func.name%>);
-        exports->Set(NanSymbol("<%=func.attributes.rename || func.name%>"), functionTemplate->GetFunction());
+        exports->Set(NanNew<v8::String>("<%=func.attributes.rename || func.name%>"), functionTemplate->GetFunction());
       }
     <% } else if(declaration['struct'] || declaration['class']) {%>
       <% var _class = declaration['struct'] || declaration['class']; %>
       {
         v8::Local<v8::FunctionTemplate> functionTemplate = NanNew<v8::FunctionTemplate>(<%=namespaceName%>::v8_<%=_class.name%>_constructor);
         functionTemplate->InstanceTemplate()->SetInternalFieldCount(1);
-        functionTemplate->SetClassName(NanSymbol("<%= _class.name %>"));
+        functionTemplate->SetClassName(NanNew<v8::String>("<%= _class.name %>"));
 
         <% _class.declarations.forEach(function(declaration) { %>
           <% if(declaration.variable) { %>
-            functionTemplate->PrototypeTemplate()->SetAccessorProperty(NanSymbol("<%=declaration.variable.name%>"), NanNew<v8::FunctionTemplate>(<%=namespaceName%>::v8_<%=_class.name%>_getter_<%=declaration.variable.name%>),
+            functionTemplate->PrototypeTemplate()->SetAccessorProperty(NanNew<v8::String>("<%=declaration.variable.name%>"), NanNew<v8::FunctionTemplate>(<%=namespaceName%>::v8_<%=_class.name%>_getter_<%=declaration.variable.name%>),
             NanNew<v8::FunctionTemplate>(<%=baseName%>::v8_<%=_class.name%>_setter_<%=declaration.variable.name%>));
           <% } else if(declaration.function) { %>
             <% var method = declaration.function; %>
-            functionTemplate->PrototypeTemplate()->Set(NanSymbol("<%= method.attributes.rename || method.name%>"), NanNew<v8::FunctionTemplate>(<%= namespaceName%>::v8_<%=_class.name %>_method_<%= method.attributes.rename || method.name%>)->GetFunction() );
+            functionTemplate->PrototypeTemplate()->Set(NanNew<v8::String>("<%= method.attributes.rename || method.name%>"), NanNew<v8::FunctionTemplate>(<%= namespaceName%>::v8_<%=_class.name %>_method_<%= method.attributes.rename || method.name%>)->GetFunction() );
           <% } %>
         <% }); %>
-          exports->Set(NanSymbol("<%=_class.name %>"), functionTemplate->GetFunction());
+          exports->Set(NanNew<v8::String>("<%=_class.name %>"), functionTemplate->GetFunction());
       }
     <% } else if(declaration.variable) {%>
       <% var variable = declaration.variable; %>
       {
-        exports->SetAccessor(NanSymbol("<%=variable.name%>"), <%=namespaceName%>::v8_getter_<%=variable.name%>
+        exports->SetAccessor(NanNew<v8::String>("<%=variable.name%>"), <%=namespaceName%>::v8_getter_<%=variable.name%>
         <% if(!variable.attributes.readonly) { %>
         ,<%=namespaceName%>::v8_setter_<%=variable.name%>
         <% } %>
@@ -63,7 +63,7 @@ static inline void init_<%=namespaceName%>(v8::Handle<v8::Object> exports) {
       {
         v8::Local<v8::Object> obj = NanNew<v8::Object>();
         <%=namespaceName%>::init_<%=declaration.namespace.name%>(obj);
-        exports->Set(NanSymbol("<%=declaration.namespace.name%>"), obj);
+        exports->Set(NanNew<v8::String>("<%=declaration.namespace.name%>"), obj);
       }
     <% } %>
   <% });%>

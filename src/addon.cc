@@ -28,7 +28,7 @@ T deref(T* in) {
 #include <tests/clib.cc>
 #include <tests/functionPointers.cc>
 #include <tests/asyncVariableCallback.cc>
-
+#include <tests/basicObjects.cc>
 #endif
 
 

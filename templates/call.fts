@@ -68,9 +68,9 @@ v8::Handle<v8::Value> v8_retValue;
 
   <% outputParameters.forEach(function(outputParameter) { %>
     <% console.log(outputParameter); %>
-    __retObject->Set(NanSymbol("<%=outputParameter.parameter.name%>"), toV8Type_<%=typeIdentifier(outputParameter.type)%>(<%=outputParameter.name%>));
+    __retObject->Set(NanNew<v8::String>("<%=outputParameter.parameter.name%>"), toV8Type_<%=typeIdentifier(outputParameter.type)%>(<%=outputParameter.name%>));
   <% }); %>
-  __retObject->Set(NanSymbol("retValue"), v8_retValue);
+  __retObject->Set(NanNew<v8::String>("retValue"), v8_retValue);
   v8_retValue = __retObject;
 <% } %>
 

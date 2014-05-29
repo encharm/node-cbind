@@ -81,7 +81,7 @@ static NAN_SETTER(v8_setter_<%= variable.name%>) {
         }).join(","); %>
 
         v8::Handle<v8::Value> args[] = {<%=callArgs%>};
-        v8::Local<v8::Value> ret = NanNew<v8::Value>(NanMakeCallback(NanGetCurrentContext()->Global(), v8Func, <%=variable.parameters.length%> ,args));
+        v8::Local<v8::Value> ret = NanMakeCallback(NanGetCurrentContext()->Global(), v8Func, <%=variable.parameters.length%> ,args);
 
         realCallback = nullptr;
 

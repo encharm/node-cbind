@@ -66,7 +66,7 @@
       v8::Local<v8::Object> prototype = fun->GetPrototype().As<v8::Object>();
 
       // this can be cached
-      v8::Local<v8::Function> bind = prototype->Get(NanSymbol("bind")).As<v8::Function>();
+      v8::Local<v8::Function> bind = prototype->Get(NanNew<v8::String>("bind")).As<v8::Function>();
       
       v8::Local<v8::ObjectTemplate> objTpl = v8::ObjectTemplate::New();
       objTpl->SetInternalFieldCount(1);
@@ -78,11 +78,11 @@
 
       // note this can be much improved in terms of performance, for example
       // by using internal fields with pointers
-      fun = NanNew<v8::Function>(NanMakeCallback(fun, bind, 1, argv).As<v8::Function>());
+      fun = NanMakeCallback(fun, bind, 1, argv).As<v8::Function>();
 
-      fun->Set(NanSymbol("__tov8_wrapped_data"), obj);
+      fun->Set(NanNew<v8::String>("__tov8_wrapped_data"), obj);
 
-      fun->Set(NanSymbol("nativeInterface"), NanNew<v8::String>(typeId));
+      fun->Set(NanNew<v8::String>("nativeInterface"), NanNew<v8::String>(typeId));
 
       return fun;
     }

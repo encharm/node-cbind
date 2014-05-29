@@ -1,6 +1,6 @@
 {
   "name": "cbind",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Streamlined C/C++ v8 bindings generator for Node.JS inspired by tolua++ (requires C++11)",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "extend": "~1.2.1",
     "fire-ts": "0.0.7",
     "glob-expand": "0.0.2",
-    "nan": "1.0.0",
+    "nan": "1.1.2",
     "nid-parser": "0.0.5",
     "pegjs": "~0.8.0"
   },
