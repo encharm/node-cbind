@@ -82,4 +82,9 @@ constexpr bool check_size(const char (&)[N])
 
 #define TYPE_LITERAL(S) MAKE_ALIGNED_STRING(sizeof(void*), S)
 
+
+#define CBIND_CONCAT(a, b) a ## b
+#define CBIND_QUOTE(str) #str
+#define CBIND_EXPAND_AND_QUOTE(str) CBIND_QUOTE(str)
+
 #endif // ALIGNED_STRING

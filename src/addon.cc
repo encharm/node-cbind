@@ -17,10 +17,6 @@ T deref(T* in) {
 
 #include <cbind_core.h>
 
-#define CBIND_CONCAT(a, b) a ## b
-#define CBIND_QUOTE(str) #str
-#define CBIND_EXPAND_AND_QUOTE(str) CBIND_QUOTE(str)
-
 #ifdef DEBUG // defined only in npm test
 
 #include <tests/variables.cc>
@@ -29,6 +25,7 @@ T deref(T* in) {
 #include <tests/functionPointers.cc>
 #include <tests/asyncVariableCallback.cc>
 #include <tests/basicObjects.cc>
+#include <tests/enums.cc>
 #endif
 
 
@@ -46,6 +43,8 @@ void init(v8::Handle<v8::Object> exports) {
   INIT_TEST(functionPointers)
   INIT_TEST(asyncVariableCallback)
   INIT_TEST(clib)
+  INIT_TEST(basicObjects)
+  INIT_TEST(enums)
   #endif
 
   cbind::init_core(exports);

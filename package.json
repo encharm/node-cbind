@@ -1,6 +1,6 @@
 {
   "name": "cbind",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Streamlined C/C++ v8 bindings generator for Node.JS inspired by tolua++ (requires C++11)",
   "main": "index.js",
   "scripts": {

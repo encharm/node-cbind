@@ -1,0 +1,13 @@
+enum {
+  FIRST,
+  SECOND = 5,
+  THIRD,
+  __END = 20
+};
+
+namespace nsenums {
+  enum {
+    AAA,
+    BBB
+  };
+}

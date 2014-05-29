@@ -205,6 +205,8 @@ template<typename T>
   }
 
 
+
+
 template<typename T>
   bool checkArgument(v8::Handle<v8::Value> obj) {
     return true;
@@ -218,84 +220,36 @@ template<typename T>
     return NanUndefined();
   }
 
-  // type int
-  template<>
-  bool checkArgument<int>(v8::Handle<v8::Value> obj) {
-    if(!obj->IsNumber())
-      return false;
-    return true;
-  }
-  template<>
-  int getArgument<int>(v8::Handle<v8::Value> obj) {
-    return obj->NumberValue();
-  }
-  
-  v8::Handle<v8::Value> toV8Type_int(int input) {
-    return NanNew<v8::Number>(input);
-  }
-
-  // type int
-  template<>
-  bool checkArgument<bool>(v8::Handle<v8::Value> obj) {
-    if(!obj->IsBoolean())
-      return false;
-    return true;
-  }
-  template<>
-  bool getArgument<bool>(v8::Handle<v8::Value> obj) {
-    return obj->BooleanValue();
-  }
-  
-  v8::Handle<v8::Value> toV8Type_bool(bool input) {
-    return NanNew<v8::Boolean>(input);
+#define cbind_declare_type(v8_type, type_name, type_identifier) \
+  template<> \
+  bool checkArgument<type_name>(v8::Handle<v8::Value> obj) { \
+    if(!obj->CBIND_CONCAT(Is, v8_type)()) \
+      return false; \
+    return true; \
+  } \
+  template<> \
+  type_name getArgument<type_name>(v8::Handle<v8::Value> obj) { \
+    return obj->CBIND_CONCAT(v8_type, Value)(); \
+  }  \
+  v8::Handle<v8::Value> CBIND_CONCAT(toV8Type_,type_identifier)(type_name input) { \
+    return NanNew<v8::v8_type>(input); \
   }
 
-  // type int
-  template<>
-  bool checkArgument<size_t>(v8::Handle<v8::Value> obj) {
-    if(!obj->IsNumber())
-      return false;
-    return true;
-  }
-  template<>
-  size_t getArgument<size_t>(v8::Handle<v8::Value> obj) {
-    return obj->NumberValue();
-  }
-  
-  v8::Handle<v8::Value> toV8Type_size_t(size_t input) {
-    return NanNew<v8::Number>(input);
+#define cbind_declare_type_alias(type_name, type_identifier_from, type_identifier) \
+  v8::Handle<v8::Value> CBIND_CONCAT(toV8Type_,type_identifier)(type_name input) { \
+    return CBIND_CONCAT(toV8Type_,type_identifier_from)(input); \
   }
 
-  // type float
-  template<>
-  bool checkArgument<float>(v8::Handle<v8::Value> obj) {
-    if(!obj->IsNumber())
-      return false;
-    return true;
-  }
-  template<>
-  float getArgument<float>(v8::Handle<v8::Value> obj) {
-    return obj->NumberValue();
-  }
-  
-  v8::Handle<v8::Value> toV8Type_float(float input) {
-    return NanNew<v8::Number>(input);
-  }
-  // type double
-  template<>
-  bool checkArgument<double>(v8::Handle<v8::Value> obj) {
-    if(!obj->IsNumber())
-      return false;
-    return true;
-  }
-  template<>
-  double getArgument<double>(v8::Handle<v8::Value> obj) {
-    return obj->NumberValue();
-  }
- 
-  v8::Handle<v8::Value> toV8Type_double(double input) {
-    return NanNew<v8::Number>(input);
-  }
+  cbind_declare_type(Number, double, double)
+  cbind_declare_type(Number, float, float)
+  cbind_declare_type(Number, size_t, size_t)
+  cbind_declare_type(Number, int, int)
+  cbind_declare_type(Number, unsigned int, unsigned_int)
+  cbind_declare_type(Boolean, bool, bool)
+
+  cbind_declare_type_alias(int, int, int32_t)
+  cbind_declare_type_alias(unsigned int, unsigned_int, uint32_t)
+
 
   // type string
   template<>
@@ -316,9 +270,6 @@ template<typename T>
   v8::Handle<v8::Value> toV8Type_std__string(std::string input) {
     return NanNew<v8::String>(input.c_str());
   }
-
-
-
 
   // type const char*
   template<>
@@ -341,8 +292,6 @@ template<typename T>
     deleter(input);
     return val;
   }
-
-
 
   template<>
   bool checkArgument<char*>(v8::Handle<v8::Value> obj) {
